@@ -13,41 +13,47 @@
 
     <form action="/dummy">
 
-        <p>
+        <div>
             <label for="firstname">First Name</label>
             <input type="text" id="firstname" name="firstname" required>
             <label for="lastname">Last Name</label>
             <input type="text" id="lastname" name="lastname" required>
-        </p>
+        </div>
 
-        <p>
-            Select a Race:
-            <input type="radio" id="5k" name="racetype" value="5k">
-            <label for="">Fun Run 5k</label>
+        <p>Select a Race:</p>
 
-            <input type="radio" id="half" name="racetype" value="half">
-            <label for="">Half Marathon</label>
+        <div>
+            <!-- ID's should NOT start with numbers -->
+            <input type="radio" id="fivek" name="racetype" value="fivek">
+            <label for="fivek">Fun Run 5k</label>
+        </div>
 
-            <input type="radio" id="full" name="racetype" value="full">
-            <label for="">Fun Marathon</label>
-        </p>
+        <div>
+            <input type="radio" id="halfm" name="racetype" value="halfm">
+            <label for="halfm">Half Marathon</label>
+        </div>
 
-        <p>
+        <div>
+            <input type="radio" id="fullm" name="racetype" value="fullm">
+            <label for="fullm">Fun Marathon</label>
+        </div>
+
+        <div>
             <label for="email">Email</label>
-            <input type="email" id="email" name="email">
+            <input type="email" id="email" name="email" required>
             <label for="password">Password</label>
-            <input type="password" id="password" name="password">
-        </p>
+            <input type="password" id="password" name="password" required>
+        </div>
 
-        <p>
+        <div>
             <label for="agegrp-select">Select Age Group</label>
             <select name="agegrp" id="agegrp-select">
-                <option value="lt18">under 18</option>
-                <option value="18to30">18-30</option>
-                <option value="30to50">30-50</option>
-                <option value="50plus">50+</option>
+                <option value="kids">under 18</option>
+                <option value="yadults">18-30</option>
+                <option value="middleaged">30-50</option>
+                <option value="seniors">50+</option>
             </select>
-        </p>
+        </div>
 
         <button>Register!</button>
     </form>
