@@ -13,7 +13,7 @@ app.use((req, res) => {
 
 // root resource gets THIS response
 app.get('/', (req, res) => {
-    res.send("<h1>I AM GROOT!</h1>");
+    res.send("<h1>I AM GROOT! err ROOT!</h1>");
 })
 
 // the colon indicates a variable in ":subreddit"
