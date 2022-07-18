@@ -16,6 +16,22 @@ app.get('/', (req, res) => {
     res.send("<h1>I AM GROOT!</h1>");
 })
 
+// the colon indicates a variable in ":subreddit"
+// matches '/r/subreddit'
+// matches '/r/dogs'
+// matches '/r/cscareerquestions'
+// does NOT match '/r/'
+// does NOT match '/r/dogs/corgis'
+// notice how variable can be accessed via req.params
+app.get('/r/:subreddit', (req, res) => {
+    res.send(`YOU asked for the ${req.params['subreddit']} subreddit.`);
+})
+
+// This will match '/r/dogs/234324232423' (above get does NOT match this)
+app.get('/r/:subreddit/:postId', (req, res) => {
+    res.send(`Browsing postId ${req.params.postId} in the ${req.params['subreddit']} subreddit.`);
+})
+
 // '/cats' path gets THIS response
 app.get('/cats', (req, res) => {
     res.send("<h1>Meow!</h1>");
