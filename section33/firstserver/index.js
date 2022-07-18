@@ -42,6 +42,21 @@ app.get('/dogs', (req, res) => {
     res.send("<h1>Woof!</h1>");
 })
 
+// Query string practice!
+// DO NOT define the query string itself explicitly;
+// instead we fetch it from the old ol' request object (request.query)
+
+// NOTE:  In Postman, add the key-value pairs in the UI text fields for ease
+app.get('/search', (req, res) => {
+    const {q, color} = req.query; // Assume that there is a ?q=something
+    if (!q) {
+        res.send('NOTHING FOUND IF NOTHING SEARCHED!');
+    }
+    else {
+        res.send(`<h1>Search results for ${q} with color ${color}</h1>`);
+    }
+})
+
 // Matches anything; put this LAST and NOT first.
 app.get('*', (req, res) => {
     res.send(`I don't know that path!`);
