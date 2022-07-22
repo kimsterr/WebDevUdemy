@@ -13,7 +13,9 @@
     <ul>
         <% for (let cmt of comments) { %>
             <li>
-                <b><%= cmt.username %></b>: <%= cmt['comment'] %>
+                <b>
+                    <%= cmt.username %>
+                </b>: <%= cmt['comment'] %>
             </li>
             <% } %>
     </ul>

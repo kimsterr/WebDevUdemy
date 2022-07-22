@@ -33,6 +33,14 @@ const comments = [
 app.get('/comments', (req, res) => {
     res.render('comments', {comments});
 })
+app.post('/comments', (req, res) => {
+    const {username, comment} = req.body;
+    // Simulate adding to DB
+    comments.push({username: username, comment: comment});
+
+    // To make sure it REALLY worked, visit /comments page (which is a GET request)
+    res.send(`Posted new comment!  User: ${username} and Comment: ${comment}`);
+})
 
 // Last time, we did GET requests like this one!
 app.get('/', (req, res) => {
