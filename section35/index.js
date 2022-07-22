@@ -30,16 +30,22 @@ const comments = [
     }
 ]
 
+app.get('/index', (req, res) => {
+    res.render('index');
+})
 app.get('/comments', (req, res) => {
-    res.render('comments', {comments});
+    res.render('comments', { comments });
 })
 app.post('/comments', (req, res) => {
-    const {username, comment} = req.body;
+    const { username, comment } = req.body;
     // Simulate adding to DB
-    comments.push({username: username, comment: comment});
+    comments.push({ username: username, comment: comment });
 
     // To make sure it REALLY worked, visit /comments page (which is a GET request)
-    res.send(`Posted new comment!  User: ${username} and Comment: ${comment}`);
+    //res.send(`Posted new comment!  User: ${username} and Comment: ${comment}`);
+
+    // The above (commented out stuff) is unsatisfactory; USE A REDIRECT!
+    res.redirect('/comments'); // defaults to a GET request
 })
 
 // Last time, we did GET requests like this one!
