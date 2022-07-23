@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views')); // Where are the ejs files ("dynamic HTML files")?
 
 // Our faux resource
-const comments = [
+let comments = [
     {
         username: 'Todd',
         comment: 'lol that is so funny!',
@@ -74,6 +74,13 @@ app.post('/comments', (req, res) => {
 
     // The above (commented out stuff) is unsatisfactory; USE A REDIRECT!
     res.redirect('/comments'); // defaults to a GET request
+})
+
+app.delete('/comments/:id', (req, res) => {
+    const id = req.params.id;
+    comments = comments.filter(c => c.id !== id);
+
+    res.redirect('/comments');
 })
 
 // Last time, we did GET requests like this one!
