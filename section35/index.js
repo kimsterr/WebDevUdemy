@@ -4,9 +4,11 @@ const app = express();
 const port = 8080;
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const methodOverride = require('method-override');
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'))
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views')); // Where are the ejs files ("dynamic HTML files")?
@@ -46,6 +48,22 @@ app.get('/comments/:id', (req, res) => {
     const comment = comments.find(c => c.id === id);
     res.render('comments/show', { comment });
 })
+app.get('/comments/:id/edit', (req, res) => {
+    const id = req.params.id;
+    const comment = comments.find(c => c.id === id);
+    res.render('comments/edit', { comment });
+})
+
+app.patch('/comments/:id', (req, res) => {
+    const id = req.params.id;
+    const newCommentText = req.body.comment; // Extract the new comment content in the Request Payload
+    const comment = comments.find(c => c.id === id); // This dude needs to be updated
+
+    // Now make the update and then redirect
+    comment.comment = newCommentText;
+    res.redirect('/comments');
+})
+
 app.post('/comments', (req, res) => {
     const { username, comment } = req.body;
     // Simulate adding to DB
