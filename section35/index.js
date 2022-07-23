@@ -3,6 +3,7 @@ const res = require('express/lib/response');
 const app = express();
 const port = 8080;
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.urlencoded({ extended: true }));
@@ -14,19 +15,23 @@ app.set('views', path.join(__dirname, '/views')); // Where are the ejs files ("d
 const comments = [
     {
         username: 'Todd',
-        comment: 'lol that is so funny!'
+        comment: 'lol that is so funny!',
+        id: uuidv4()
     },
     {
         username: 'Skyler',
-        comment: 'I like to go birdwatching with my dog'
+        comment: 'I like to go birdwatching with my dog',
+        id: uuidv4()
     },
     {
         username: 'Sk8erBoi',
-        comment: 'Plz delete your account, Todd'
+        comment: 'Plz delete your account, Todd',
+        id: uuidv4()
     },
     {
         username: 'onlysayswoof',
-        comment: 'woof woof woof'
+        comment: 'woof woof woof',
+        id: uuidv4()
     }
 ]
 
@@ -36,10 +41,15 @@ app.get('/index', (req, res) => {
 app.get('/comments', (req, res) => {
     res.render('comments', { comments });
 })
+app.get('/comments/:id', (req, res) => {
+    const id = req.params.id;
+    const comment = comments.find(c => c.id === id);
+    res.render('comments/show', { comment });
+})
 app.post('/comments', (req, res) => {
     const { username, comment } = req.body;
     // Simulate adding to DB
-    comments.push({ username: username, comment: comment });
+    comments.push({ username: username, comment: comment, id: uuidv4() });
 
     // To make sure it REALLY worked, visit /comments page (which is a GET request)
     //res.send(`Posted new comment!  User: ${username} and Comment: ${comment}`);

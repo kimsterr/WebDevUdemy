@@ -16,6 +16,8 @@
                 <b>
                     <%= cmt.username %>
                 </b>: <%= cmt['comment'] %>
+                <a href="/comments/<%= cmt.id %>">Details</a>
+                <br>
             </li>
             <% } %>
     </ul>
