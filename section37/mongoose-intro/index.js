@@ -60,3 +60,17 @@ Movie.findById(id)
 Movie.findById(id, 'title score')
     .then(data => console.log(data));
 */
+
+// Update the first query result matching the first passed in object
+// using the info from the second passed in object
+// Does NOT return updated object.  So "res" is NOT the updated object.
+Movie.updateOne({ title: 'Amelie' }, { rating: 9.8 })
+    .then(res => console.log(res));
+
+Movie.updateMany({ title: { $in: ['Amadeus', 'Stand By Me'] } }, { score: 10 })
+    .then(res => console.log(res));
+
+// This will return actual (updated) object in m.  NEED third arg {new: true} because
+// returns OLD object in m as the default.
+Movie.findOneAndUpdate({ title: 'Amelie' }, { rating: 9.6 }, { new: true })
+    .then(m => console.log(m)); 
