@@ -73,4 +73,14 @@ Movie.updateMany({ title: { $in: ['Amadeus', 'Stand By Me'] } }, { score: 10 })
 // This will return actual (updated) object in m.  NEED third arg {new: true} because
 // returns OLD object in m as the default.
 Movie.findOneAndUpdate({ title: 'Amelie' }, { rating: 9.6 }, { new: true })
-    .then(m => console.log(m)); 
+    .then(m => console.log(m));
+
+// Returns delete count but NOT the deleted object itself
+Movie.remove({ title: 'Amelie' })
+    .then(msg => console.log(msg));
+
+Movie.deleteMany({ year: { $gte: 1999 } })
+    .then(msg => console.log(msg));
+
+Movie.findOneAndDelete({ title: 'Amadeus' })
+    .then(m => console.log(m));
