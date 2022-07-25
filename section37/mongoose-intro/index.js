@@ -29,3 +29,34 @@ const amadeus = new Movie({ title: 'Amadeus', year: 1984, score: 9.2, rating: 'R
 // Save this object to the mongo DB (otherwise, DB doesn't contain it)
 // Works even if the collection doesn't exist yet.  Just need to be connected to DB.
 amadeus.save()
+
+// It takes time, so need to work with callbacks and promises
+// This one does NOT need a separate save
+Movie.insertMany([
+    { title: 'Amelie', year: 2001, score: 8.3, rating: 'R' },
+    { title: 'The Iron Giant', year: 1999, score: 7.5, rating: 'PG' },
+    { title: 'Stand By Me', year: 1986, score: 8.6, rating: 'R' },
+])
+    .then(data => {
+        console.log("IT WORKED");
+        console.log(data);
+    })
+
+// Movie.find(...) returns a QUERY object.
+// A query object is NOT a promise, but it IS "then-able"
+Movie.find({ year: { $gte: 1980, $lte: 1989 } })
+    .then(data => console.log(data)); // Here, data is an ARRAY of objects
+Movie.findOne({ year: { $gte: 1980, $lte: 1989 } })
+    .then(data => console.log(data)); // Here, data is a SINGLE object
+
+// Using callbacks
+Movie.find({ year: { $gte: 1980, $lte: 1989 } }, function (err, arr) { });
+
+const id = '62ded9cab72f7883df35b54d'; // Dummy ID
+Movie.findById(id)
+    .then(data => console.log(data));
+/*
+// select only the movie's title and score
+Movie.findById(id, 'title score')
+    .then(data => console.log(data));
+*/
