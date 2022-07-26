@@ -25,7 +25,7 @@ const productSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: true,
-        min: 0
+        min: [0, 'Price must be positive!']
     },
     onSale: {
         type: Boolean,
@@ -45,17 +45,42 @@ const productSchema = new mongoose.Schema({
             type: Number,
             default: 0
         }
+    },
+    size: {
+        type: String,
+        enum: ['S', 'M', 'L']
     }
 })
+
+// Create model instance methods
+productSchema.methods.greet = function () {
+    console.log("HELLO!!! HI!!! HOWDY!!!!")
+    console.log(` - from ${this.name}`);
+}
+productSchema.methods.toggleOnSale = function () {
+    this.onSale = !this.onSale;
+    return this.save();
+}
+productSchema.methods.addCategory = function (newCat) {
+    this.categories.push(newCat);
+    return this.save();
+}
 
 // Make Model class
 const Product = mongoose.model('Product', productSchema)
 
+const findProduct = async () => {
+    const foundProduct = await Product.findOne({ name: 'Mountain Bike' });
+    foundProduct.greet();
+}
+
+// "Driver part" of the file using the stuff above
 const bike = new Product({ name: 'Mountain Bike', price: 599 });
 bike.save()
     .then(data => {
         console.log("It worked!")
         console.log(data)
+        findProduct()
     })
     .catch(err => {
         console.log("Oh no error!")
