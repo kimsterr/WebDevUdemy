@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 // Get mongoose to connect to mongodb server running in the background
 // The default mongo port is 27017 (it's on MongoDB docs)
 // mongodb://localhost:27017  <= Where mongodb is being served locally on machine
-// test <= Which database to use (can either already exist or not and be created)
+// movies <= Which database to use (can either already exist or not and be created)
 mongoose.connect('mongodb://localhost:27017/movies')
     .then(() => {
         console.log("CONNECTION OPEN!");
@@ -25,6 +25,7 @@ const movieSchema = new Schema({
 // pass in string containing name of model, and the schema
 const Movie = mongoose.model('Movie', movieSchema); // Yes it is capitalized; "Movie" is a model CLASS
 const amadeus = new Movie({ title: 'Amadeus', year: 1984, score: 9.2, rating: 'R' });
+// KEY POINT:  a collection called "movies" is created; Movie->movie->movies (lowercase + plural)
 
 // Save this object to the mongo DB (otherwise, DB doesn't contain it)
 // Works even if the collection doesn't exist yet.  Just need to be connected to DB.
