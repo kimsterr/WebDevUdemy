@@ -66,6 +66,13 @@ productSchema.methods.addCategory = function (newCat) {
     return this.save();
 }
 
+// Add model static methods
+productSchema.statics.fireSale = function () {
+    // use this.updateMany instead of Product.updateMany to avoid hardcoding
+    // first {} means to update EVERYTHING
+    return this.updateMany({}, { price: 0, onSale: true })
+}
+
 // Make Model class
 const Product = mongoose.model('Product', productSchema)
 
