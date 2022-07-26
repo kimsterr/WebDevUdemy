@@ -7,7 +7,7 @@ const methodOverride = require('method-override'); // For UPDATE capabilities!
 
 const mongoose = require('mongoose')
 const { Schema } = mongoose;
-mongoose.connect('mongodb://localhost:27017/movies')
+mongoose.connect('mongodb://localhost:27017/shopApp')
     .then(() => {
         console.log("DB CONNECTION OPEN!");
     })
