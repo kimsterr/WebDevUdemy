@@ -5,18 +5,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Products</title>
+    <title>Product Details</title>
 </head>
 
 <body>
-    <h1>All the products!!!!!</h1>
+    <h1>Details about: <%= product.name %>
+    </h1>
 
     <ul>
-        <% for (let pr of products) { %>
-            <li>
-                <%= pr.name %> <a href="./products/<%= pr.id %>">Details</a>
-            </li>
-            <% } %>
+        <li>Product price: <%= product.price %>
+        </li>
+        <li>Product category: <%= product.category %>
+        </li>
     </ul>
 
 </body>

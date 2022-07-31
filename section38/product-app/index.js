@@ -25,6 +25,13 @@ app.get('/products', async (req, res) => {
     res.render('products/index', { products });
 })
 
+app.get('/products/:id', async (req, res) => {
+    const id = req.params.id;
+    const product = await Product.findById(mongoose.Types.ObjectId(id));
+
+    res.render('products/show', { product });
+})
+
 app.listen(port, () => {
     console.log(`Example app listening at https://localhost:${port}`);
 })
