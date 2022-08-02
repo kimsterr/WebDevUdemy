@@ -18,6 +18,7 @@ mongoose.connect('mongodb://localhost:27017/farmStand')
     })
 
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'))
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -34,8 +35,15 @@ app.get('/products/:id', async (req, res) => {
     res.render('products/show', { product });
 })
 
-app.get('/newproduct', async (req, res) => {
+app.get('/newproduct', (req, res) => {
     res.render('forms/new');
+})
+
+app.get('/products/:id/edit', async (req, res) => {
+    const id = req.params.id;
+    const product = await Product.findById(mongoose.Types.ObjectId(id));
+
+    res.render('forms/edit', { product });
 })
 
 app.post('/products', async (req, res) => {
@@ -48,6 +56,17 @@ app.post('/products', async (req, res) => {
     await newProd.save();
 
     res.redirect('/products');
+})
+
+app.put('/products/:id', async (req, res) => {
+    const id = req.params.id;
+
+    const { name, price, category } = req.body;
+
+    // Now make the updates from what we fetched with form
+    await Product.findByIdAndUpdate(id, { name, price, category }, { runValidators: true, new: true });
+
+    res.redirect(`/products/${id}`);
 })
 
 app.listen(port, () => {
