@@ -17,6 +17,8 @@ mongoose.connect('mongodb://localhost:27017/farmStand')
         console.log(err);
     })
 
+app.use(express.urlencoded({ extended: true }));
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -30,6 +32,22 @@ app.get('/products/:id', async (req, res) => {
     const product = await Product.findById(mongoose.Types.ObjectId(id));
 
     res.render('products/show', { product });
+})
+
+app.get('/newproduct', async (req, res) => {
+    res.render('forms/new');
+})
+
+app.post('/products', async (req, res) => {
+    // To create a new product, need some user input VIA, say, a form
+    // which in this case exists at '/newproduct'
+    const { name, price, category } = req.body;
+
+    // Insert these into the database
+    const newProd = new Product({ name, price, category });
+    await newProd.save();
+
+    res.redirect('/products');
 })
 
 app.listen(port, () => {
