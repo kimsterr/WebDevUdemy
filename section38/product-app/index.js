@@ -24,8 +24,19 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.get('/products', async (req, res) => {
-    const products = await Product.find({}); // An array of our products
-    res.render('products/index', { products });
+    const { category } = req.query;   //  /products?category=fruit
+
+    if (!category) {
+        const products = await Product.find({}); // An array of our products
+        res.render('products/index', { products });
+    }
+    else {
+        Product.find({ category: category })
+            .then(data => res.render('products/category', { products: data, category }));
+        // Could also do:
+        // const products = await Product.find({ category })
+        // res.render('products/category', { products, category });
+    }
 })
 
 app.get('/products/:id', async (req, res) => {

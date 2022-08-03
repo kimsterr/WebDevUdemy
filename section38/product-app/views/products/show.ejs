@@ -15,7 +15,9 @@
     <ul>
         <li>Product price: <%= product.price %>
         </li>
-        <li>Product category: <%= product.category %>
+        <li>Product category: <a href="/products?category=<%= product.category %>">
+                <%= product.category %>
+            </a>
         </li>
     </ul>
 
