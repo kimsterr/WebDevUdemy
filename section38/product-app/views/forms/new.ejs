@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a new product</title>
+</head>
+
+<body>
+    <h1>Create a new product!</h1>
+
+    <form action="/products" method="post" class="new-form">
+        <div class="new-form">
+            <label for="name">Product name: </label>
+            <input type="text" name="name" id="name" required>
+        </div>
+        <div class="new-form">
+            <label for="price">Product price per unit/lb (USD $): </label>
+            <input type="number" min="0" step="0.01" name="price" id="price" required>
+        </div>
+        <div class="new-form">
+            <label for="category">Choose a category:</label>
+
+            <select name="category" id="category">
+                <option value="fruit">Fruit</option>
+                <option value="dairy">Dairy</option>
+                <option value="vegetable">Vegetable</option>
+            </select>
+        </div>
+
+        <button>Submit</button>
+    </form>
+
+</body>
+
+</html>
