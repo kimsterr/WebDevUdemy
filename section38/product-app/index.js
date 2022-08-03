@@ -69,6 +69,14 @@ app.put('/products/:id', async (req, res) => {
     res.redirect(`/products/${id}`);
 })
 
+app.delete('/products/:id', async (req, res) => {
+    const id = req.params.id;
+
+    await Product.findByIdAndDelete(id);
+
+    res.redirect('/products');
+})
+
 app.listen(port, () => {
     console.log(`Example app listening at https://localhost:${port}`);
 })
