@@ -24,6 +24,11 @@ app.get('/', (req, res) => {
     res.send("HELLO FROM YELPCAMP!");
 })
 
+app.get('/campgrounds', async (req, res) => {
+    const campgrounds = await Campground.find({});
+    res.render("campgrounds/index", { campgrounds });
+})
+
 app.listen(port, () => {
     console.log(`Example app listening at https://localhost:${port}`);
 })
