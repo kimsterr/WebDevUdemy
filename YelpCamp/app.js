@@ -6,6 +6,8 @@ const path = require('path');
 const methodOverride = require('method-override'); // For UPDATE capabilities!
 const mongoose = require('mongoose')
 
+app.use(express.urlencoded({ extended: true }));
+
 mongoose.connect('mongodb://localhost:27017/yelp-camp')
     .then(() => {
         console.log("DB CONNECTION OPEN!");
@@ -29,10 +31,21 @@ app.get('/campgrounds', async (req, res) => {
     res.render("campgrounds/index", { campgrounds });
 })
 
+app.get('/campgrounds/new', (req, res) => {
+    res.render("campgrounds/new");
+})
+
 app.get('/campgrounds/:id', async (req, res) => {
     const id = req.params.id;
     const campground = await Campground.findById(id);
     res.render("campgrounds/show", { campground });
+})
+
+app.post('/campgrounds', async (req, res) => {
+    const { title, location } = req.body.campground;
+    const newCG = new Campground({ title, location });
+    await newCG.save();
+    res.redirect(`/campgrounds/${newCG._id}`);
 })
 
 app.listen(port, () => {
