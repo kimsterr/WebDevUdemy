@@ -14,7 +14,9 @@
     <ul>
         <% for (let cmpgd of campgrounds) {%>
             <li>
-                <%= cmpgd.title %>
+                <a href="/campgrounds/<%= cmpgd._id %>">
+                    <%= cmpgd.title %>
+                </a>
             </li>
             <% } %>
     </ul>
