@@ -7,6 +7,7 @@ const methodOverride = require('method-override'); // For UPDATE capabilities!
 const mongoose = require('mongoose')
 
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'))
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp')
     .then(() => {
@@ -41,11 +42,21 @@ app.get('/campgrounds/:id', async (req, res) => {
     res.render("campgrounds/show", { campground });
 })
 
+app.get('/campgrounds/:id/edit', async (req, res) => {
+    const id = req.params.id;
+    const campground = await Campground.findById(id);
+    res.render("campgrounds/edit", { campground });
+})
+
 app.post('/campgrounds', async (req, res) => {
-    const { title, location } = req.body.campground;
-    const newCG = new Campground({ title, location });
+    const newCG = new Campground({ ...req.body.campground });
     await newCG.save();
     res.redirect(`/campgrounds/${newCG._id}`);
+})
+
+app.put('/campgrounds/:id', async (req, res) => {
+    await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
+    res.redirect(`/campgrounds/${req.params.id}`);
 })
 
 app.listen(port, () => {
