@@ -8,7 +8,16 @@
         <li>
             Location: <%= campground.location %>
         </li>
+        <li>
+            Description: <%= campground.description %>
+        </li>
+        <li>
+            Price: <%= campground.price %>
+        </li>
     </ul>
+
+    <img src="<%= campground.image %>" alt="">
+
     <a href="/campgrounds/<%= campground._id %>/edit">EDIT this</a>
     <a href="/campgrounds">Back to index</a>
     <p>
