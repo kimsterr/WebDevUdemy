@@ -5,6 +5,7 @@ const port = 8080;
 const path = require('path');
 const methodOverride = require('method-override'); // For UPDATE capabilities!
 const mongoose = require('mongoose')
+const ejsMate = require('ejs-mate')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'))
@@ -20,6 +21,7 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp')
 
 const Campground = require('./models/campground')
 
+app.engine('ejs', ejsMate)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
