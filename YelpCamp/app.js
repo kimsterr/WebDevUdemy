@@ -75,8 +75,9 @@ app.all('*', (req, res, next) => {
 
 // The final error handler
 app.use((err, req, res, next) => {
-    const { status = 500, message = 'Something went wrong' } = err
-    res.status(status).send(message);
+    if (!err.status) err.status = 500;
+    if (!err.message) err.message = 'Oh No, Something Went Wrong!'
+    res.render('error', { err });
 })
 
 app.listen(port, () => {
