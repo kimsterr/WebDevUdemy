@@ -6,6 +6,8 @@ const path = require('path');
 const methodOverride = require('method-override'); // For UPDATE capabilities!
 const mongoose = require('mongoose')
 const ejsMate = require('ejs-mate')
+const ExpressError = require('./utils/ExpressError')
+const wrapAsync = require('./utils/catchAsync')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'))
@@ -29,41 +31,47 @@ app.get('/', (req, res) => {
     res.send("HELLO FROM YELPCAMP!");
 })
 
-app.get('/campgrounds', async (req, res) => {
+app.get('/campgrounds', wrapAsync(async (req, res, next) => {
     const campgrounds = await Campground.find({});
     res.render("campgrounds/index", { campgrounds });
-})
+}))
 
 app.get('/campgrounds/new', (req, res) => {
     res.render("campgrounds/new");
 })
 
-app.get('/campgrounds/:id', async (req, res) => {
+app.get('/campgrounds/:id', wrapAsync(async (req, res, next) => {
     const id = req.params.id;
     const campground = await Campground.findById(id);
     res.render("campgrounds/show", { campground });
-})
+}))
 
-app.get('/campgrounds/:id/edit', async (req, res) => {
+app.get('/campgrounds/:id/edit', wrapAsync(async (req, res, next) => {
     const id = req.params.id;
     const campground = await Campground.findById(id);
     res.render("campgrounds/edit", { campground });
-})
+}))
 
-app.post('/campgrounds', async (req, res) => {
+app.post('/campgrounds', wrapAsync(async (req, res, next) => {
     const newCG = new Campground({ ...req.body.campground });
     await newCG.save();
     res.redirect(`/campgrounds/${newCG._id}`);
-})
+}))
 
-app.put('/campgrounds/:id', async (req, res) => {
+app.put('/campgrounds/:id', wrapAsync(async (req, res, next) => {
     await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
     res.redirect(`/campgrounds/${req.params.id}`);
-})
+}))
 
-app.delete('/campgrounds/:id', async (req, res) => {
+app.delete('/campgrounds/:id', wrapAsync(async (req, res, next) => {
     await Campground.findByIdAndDelete(req.params.id);
     res.redirect('/campgrounds');
+}))
+
+// The final error handler
+app.use((err, req, res, next) => {
+    const { status = 500, message = 'Something went wrong' } = err
+    res.status(status).send(message);
 })
 
 app.listen(port, () => {
