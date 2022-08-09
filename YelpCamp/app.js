@@ -6,6 +6,7 @@ const path = require('path');
 const methodOverride = require('method-override'); // For UPDATE capabilities!
 const mongoose = require('mongoose')
 const ejsMate = require('ejs-mate')
+const Joi = require('joi');
 const ExpressError = require('./utils/ExpressError')
 const wrapAsync = require('./utils/catchAsync')
 
@@ -53,6 +54,21 @@ app.get('/campgrounds/:id/edit', wrapAsync(async (req, res, next) => {
 }))
 
 app.post('/campgrounds', wrapAsync(async (req, res, next) => {
+    // schema validation on server-side via Joi
+    const campgroundSchema = Joi.object({
+        campground: Joi.object({
+            title: Joi.string().required(),
+            price: Joi.number().required().min(0),
+            image: Joi.string().required(),
+            location: Joi.string.required(),
+            description: Joi.string().required()
+        }).required()
+    })
+    const err = campgroundSchema.validate(req.body).error
+    if (err) {
+        const errMsg = err.details.map(el => el.message).join(',');
+        throw new ExpressError(errMsg, 400);
+    }
     const newCG = new Campground({ ...req.body.campground });
     await newCG.save();
     res.redirect(`/campgrounds/${newCG._id}`);
