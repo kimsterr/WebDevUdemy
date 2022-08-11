@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose;
 
-const campgroundSchema = new mongoose.Schema({
+const campgroundSchema = new Schema({
     title: {
         type: String
     },
@@ -16,7 +16,13 @@ const campgroundSchema = new mongoose.Schema({
     },
     location: {
         type: String
-    }
+    },
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
+        }
+    ]
 });
 
 // Make Model class

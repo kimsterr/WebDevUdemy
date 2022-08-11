@@ -23,6 +23,7 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp')
     })
 
 const Campground = require('./models/campground')
+const Review = require('./models/review')
 
 app.engine('ejs', ejsMate)
 app.set('views', path.join(__dirname, 'views'));
