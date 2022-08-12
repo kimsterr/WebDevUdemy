@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose;
+const Review = require('./review')
 
 const campgroundSchema = new Schema({
     title: {
@@ -24,6 +25,12 @@ const campgroundSchema = new Schema({
         }
     ]
 });
+
+campgroundSchema.post('findOneAndDelete', async function (campground) {
+    if (campground.reviews.length) {
+        await Review.deleteMany({ _id: { $in: campground.reviews } });
+    }
+})
 
 // Make Model class
 const Campground = mongoose.model('Campground', campgroundSchema) // We are compiling the model
