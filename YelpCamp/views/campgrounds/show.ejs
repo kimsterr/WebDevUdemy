@@ -26,13 +26,14 @@
 
     <h2> Campground Reviews </h2>
     <div class="row">
-        <ul>
-            <% for (let rev of campground.reviews) { %>
-                <li>
-                    (<%= rev.rating %>*) <%= rev.body %>
-                </li>
-                <% } %>
-        </ul>
+        <% for (let rev of campground.reviews) { %>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <b>(<%= rev.rating %>*)</b>
+                    <%= rev.body %>
+                </div>
+            </div>
+            <% } %>
     </div>
 
     <div class="row">
