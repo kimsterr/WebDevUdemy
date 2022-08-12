@@ -6,7 +6,7 @@ const path = require('path');
 const methodOverride = require('method-override'); // For UPDATE capabilities!
 const mongoose = require('mongoose')
 const ejsMate = require('ejs-mate')
-const { campgroundSchema } = require('./joiSchemas')
+const { campgroundSchema, reviewSchema } = require('./joiSchemas')
 const ExpressError = require('./utils/ExpressError')
 const wrapAsync = require('./utils/catchAsync')
 
@@ -23,20 +23,23 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp')
     })
 
 const Campground = require('./models/campground')
+const Review = require('./models/review')
 
 app.engine('ejs', ejsMate)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
-function validateCampground(req, res, next) {
-    const err = campgroundSchema.validate(req.body).error
-    if (err) {
-        const errMsg = err.details.map(el => el.message).join(',');
-        next(new ExpressError(errMsg, 400));
-    }
-    else {
-        next();
+function validate(schema) {
+    return (req, res, next) => {
+        const err = schema.validate(req.body).error
+        if (err) {
+            const errMsg = err.details.map(el => el.message).join(',');
+            next(new ExpressError(errMsg, 400));
+        }
+        else {
+            next();
+        }
     }
 }
 
@@ -55,7 +58,7 @@ app.get('/campgrounds/new', (req, res) => {
 
 app.get('/campgrounds/:id', wrapAsync(async (req, res, next) => {
     const id = req.params.id;
-    const campground = await Campground.findById(id);
+    const campground = await Campground.findById(id).populate('reviews');
     res.render("campgrounds/show", { campground });
 }))
 
@@ -65,13 +68,33 @@ app.get('/campgrounds/:id/edit', wrapAsync(async (req, res, next) => {
     res.render("campgrounds/edit", { campground });
 }))
 
-app.post('/campgrounds', validateCampground, wrapAsync(async (req, res, next) => {
+app.get("/campgrounds/:id/reviews/new", (req, res) => {
+    const id = req.params.id;
+    res.render("reviews/new", { id });
+})
+
+
+app.post('/campgrounds', validate(campgroundSchema), wrapAsync(async (req, res, next) => {
     const newCG = new Campground({ ...req.body.campground });
     await newCG.save();
     res.redirect(`/campgrounds/${newCG._id}`);
 }))
 
-app.put('/campgrounds/:id', validateCampground, wrapAsync(async (req, res, next) => {
+app.post('/campgrounds/:id/reviews', validate(reviewSchema), wrapAsync(async (req, res) => {
+    const id = req.params.id;
+    const review = new Review(req.body.review);
+    await review.save();
+
+    // Add the review to the campground arry of ObjectID’s
+    const campground = await Campground.findById(id);
+    campground.reviews.push(review);
+    await campground.save();
+
+    res.redirect(`/campgrounds/${campground._id}`);
+}))
+
+
+app.put('/campgrounds/:id', validate(campgroundSchema), wrapAsync(async (req, res, next) => {
     await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
     res.redirect(`/campgrounds/${req.params.id}`);
 }))
@@ -79,6 +102,14 @@ app.put('/campgrounds/:id', validateCampground, wrapAsync(async (req, res, next)
 app.delete('/campgrounds/:id', wrapAsync(async (req, res, next) => {
     await Campground.findByIdAndDelete(req.params.id);
     res.redirect('/campgrounds');
+}))
+
+app.delete('/campgrounds/:cid/reviews/:rid', wrapAsync(async (req, res, next) => {
+    const { rid, cid } = req.params;
+    await Review.findByIdAndDelete(rid);
+    await Campground.findByIdAndUpdate(cid, { $pull: { reviews: rid } });
+
+    res.redirect(`/campgrounds/${cid}`)
 }))
 
 app.all('*', (req, res, next) => {
