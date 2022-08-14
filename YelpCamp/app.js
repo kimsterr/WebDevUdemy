@@ -11,6 +11,7 @@ const reviewRoutes = require('./routes/reviews')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'))
+app.use(express.static(path.join(__dirname, 'public')))
 app.use('/campgrounds/:id/reviews', reviewRoutes)
 app.use('/campgrounds', campgroundRoutes)
 
