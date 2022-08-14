@@ -7,9 +7,11 @@ const mongoose = require('mongoose')
 const ejsMate = require('ejs-mate')
 const ExpressError = require('./utils/ExpressError')
 const campgroundRoutes = require('./routes/campgrounds')
+const reviewRoutes = require('./routes/reviews')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'))
+app.use('/campgrounds/:id/reviews', reviewRoutes)
 app.use('/campgrounds', campgroundRoutes)
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp')
