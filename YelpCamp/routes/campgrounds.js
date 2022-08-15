@@ -32,6 +32,7 @@ router.get('/:id/edit', wrapAsync(async (req, res, next) => {
 router.post('/', validate(campgroundSchema), wrapAsync(async (req, res, next) => {
     const newCG = new Campground({ ...req.body.campground });
     await newCG.save();
+    req.flash('success', 'Successfully made a new campground!');
     res.redirect(`/campgrounds/${newCG._id}`);
 }))
 

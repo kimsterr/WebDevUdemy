@@ -9,6 +9,7 @@ const ExpressError = require('./utils/ExpressError')
 const campgroundRoutes = require('./routes/campgrounds')
 const reviewRoutes = require('./routes/reviews')
 const session = require('express-session');
+const flash = require('connect-flash')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'))
@@ -26,6 +27,16 @@ const sessionConfig = {
     }
 }
 app.use(session(sessionConfig))
+app.use(flash())
+
+app.use((req, res, next) => {
+    // res.locals:  Available for the views rendered during THAT request-response cycle
+    // The .success part could be named anything, technically.  In the prior section
+    // we used the more generic .message .  Just be consistent when extracting.
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
 
 app.use('/campgrounds/:id/reviews', reviewRoutes)
 app.use('/campgrounds', campgroundRoutes)
