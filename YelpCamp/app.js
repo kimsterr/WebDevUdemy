@@ -66,7 +66,8 @@ app.all('*', (req, res, next) => {
 app.use((err, req, res, next) => {
     if (!err.status) err.status = 500;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
-    res.render('error', { err });
+    req.flash('error', `Message: ${err.message}, Status: ${err.status}`)
+    res.redirect('/campgrounds')
 })
 
 app.listen(port, () => {
