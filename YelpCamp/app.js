@@ -8,6 +8,7 @@ const ejsMate = require('ejs-mate')
 const ExpressError = require('./utils/ExpressError')
 const campgroundRoutes = require('./routes/campgrounds')
 const reviewRoutes = require('./routes/reviews')
+const userRoutes = require('./routes/users')
 const session = require('express-session');
 const flash = require('connect-flash')
 const passport = require('passport')
@@ -56,14 +57,7 @@ app.use((req, res, next) => {
     next();
 })
 
-// Temp code
-app.get('/fakeUser', async (req, res) => {
-    const user = new User({email: 'lala@gmail.com', username: 'lala'})
-    // hashes password along with salt (use Pbkdf2) and stores with newUser
-    const newUser = await User.register(user, 'password123')
-    res.send(newUser) // newUser has fields _id, email, username, salt, hash
-})
-
+app.use('/', userRoutes)
 app.use('/campgrounds/:id/reviews', reviewRoutes)
 app.use('/campgrounds', campgroundRoutes)
 

@@ -11,10 +11,17 @@ module.exports.campgroundSchema = Joi.object({
     }).required()
 })
 
-// schema validation on server-side via Joi
 module.exports.reviewSchema = Joi.object({
     review: Joi.object({
         body: Joi.string().required(),
         rating: Joi.number().required().min(1).max(5)
+    }).required()
+})
+
+module.exports.userSchema = Joi.object({
+    user: Joi.object({
+        username: Joi.string().required(),
+        email: Joi.string().required(),
+        password: Joi.string().required()
     }).required()
 })
