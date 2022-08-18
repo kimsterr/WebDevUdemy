@@ -9,7 +9,7 @@ router.get('/register', (req, res) => {
     res.render('users/register');
 })
 
-router.post('/register', wrapAsync(async (req, res, next) => {
+router.post('/register', validate(userSchema), wrapAsync(async (req, res, next) => {
     res.send(req.body)
 }))
 
