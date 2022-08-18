@@ -10,15 +10,12 @@ router.get('/register', (req, res) => {
 })
 
 router.post('/register', validate(userSchema), wrapAsync(async (req, res, next) => {
-    res.send(req.body)
+    const user = new User({ email: req.body.email, username: req.body.username })
+    // This results "salt" and "hash" fields
+    const newUser = await User.register(user, req.body.password);
+    await newUser.save();
+    req.flash('success', 'Successfully registered!');
+    res.redirect(`/campgrounds`);
 }))
 
 module.exports = router;
-
-/*
-const user = new User({ email: req.body.email, username: req.body.username })
-const newUser = await User.register(user, req.body.password);
-await newUser.save();
-req.flash('success', 'Successfully registered!');
-res.redirect(`/campgrounds`);
-*/
