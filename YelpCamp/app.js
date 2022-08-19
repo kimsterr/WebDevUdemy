@@ -52,6 +52,7 @@ app.use((req, res, next) => {
     // res.locals:  Available for the views rendered during THAT request-response cycle
     // The .success part could be named anything, technically.  In the prior section
     // we used the more generic .message.  Just be consistent when extracting.
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
