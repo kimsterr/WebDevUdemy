@@ -15,8 +15,11 @@ router.post('/register', validate(userSchema), wrapAsync(async (req, res, next) 
     // This results "salt" and "hash" fields
     const newUser = await User.register(user, req.body.password);
     await newUser.save();
-    req.flash('success', 'Successfully registered!');
-    res.redirect(`/campgrounds`);
+    req.login(newUser, function (err) {
+        if (err) { return next(err); }
+        req.flash('success', 'Successfully registered!');
+        res.redirect(`/campgrounds`);
+    });
 }))
 
 router.get('/login', (req, res) => {
@@ -38,6 +41,6 @@ router.get('/logout', (req, res, next) => {
         req.flash('success', 'Successfully logged out!');
         res.redirect('/campgrounds');
     });
- }) 
+})
 
 module.exports = router;
