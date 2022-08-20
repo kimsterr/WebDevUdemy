@@ -20,7 +20,7 @@ router.get('/new', isLoggedIn, (req, res) => {
 
 router.get('/:id', wrapAsync(async (req, res, next) => {
     const id = req.params.id;
-    const campground = await Campground.findById(id).populate('reviews');
+    const campground = await Campground.findById(id).populate('reviews').populate('author');
     if (!campground) {
         req.flash('error', 'Cannot find that campground!');
         return res.redirect('/campgrounds')
@@ -39,7 +39,7 @@ router.get('/:id/edit', isLoggedIn, wrapAsync(async (req, res, next) => {
 }))
 
 router.post('/', isLoggedIn, validate(campgroundSchema), wrapAsync(async (req, res, next) => {
-    const newCG = new Campground({ ...req.body.campground });
+    const newCG = new Campground({ ...req.body.campground, author: req.user });
     await newCG.save();
     req.flash('success', 'Successfully made a new campground!');
     res.redirect(`/campgrounds/${newCG._id}`);
