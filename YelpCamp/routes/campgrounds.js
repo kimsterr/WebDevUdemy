@@ -3,6 +3,7 @@ const router = express.Router();
 
 const wrapAsync = require('../utils/catchAsync')
 const validate = require('../utils/middleware/validateSchema')
+const isAuthor = require('../utils/middleware/isAuthor')
 const Campground = require('../models/campground')
 const { campgroundSchema } = require('../joiSchemas')
 const isLoggedIn = require('../utils/middleware/isLoggedIn')
@@ -28,7 +29,7 @@ router.get('/:id', wrapAsync(async (req, res, next) => {
     res.render("campgrounds/show", { campground });
 }))
 
-router.get('/:id/edit', isLoggedIn, wrapAsync(async (req, res, next) => {
+router.get('/:id/edit', isLoggedIn, isAuthor, wrapAsync(async (req, res, next) => {
     const id = req.params.id;
     const campground = await Campground.findById(id);
     if (!campground) {
@@ -45,20 +46,13 @@ router.post('/', isLoggedIn, validate(campgroundSchema), wrapAsync(async (req, r
     res.redirect(`/campgrounds/${newCG._id}`);
 }))
 
-router.put('/:id', isLoggedIn, validate(campgroundSchema), wrapAsync(async (req, res, next) => {
-    const cg = await Campground.findById(req.params.id);
-    if (!cg.author.equals(req.user._id)) {
-        req.flash('error', 'User not authorized to perform that action!');
-        res.redirect('back');
-    }
-    else {
-        await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground })
-        req.flash('success', 'Successfully updated campground!');
-        res.redirect(`/campgrounds/${req.params.id}`);
-    }
+router.put('/:id', isLoggedIn, isAuthor, validate(campgroundSchema), wrapAsync(async (req, res, next) => {
+    await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground })
+    req.flash('success', 'Successfully updated campground!');
+    res.redirect(`/campgrounds/${req.params.id}`);
 }))
 
-router.delete('/:id', isLoggedIn, wrapAsync(async (req, res, next) => {
+router.delete('/:id', isLoggedIn, isAuthor, wrapAsync(async (req, res, next) => {
     await Campground.findByIdAndDelete(req.params.id);
     req.flash('success', 'Successfully deleted campground!');
     res.redirect('/campgrounds');
