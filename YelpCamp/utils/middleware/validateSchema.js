@@ -1,4 +1,4 @@
-const ExpressError = require('../utils/ExpressError')
+const ExpressError = require('../ExpressError')
 
 function validate(schema) {
     return (req, res, next) => {

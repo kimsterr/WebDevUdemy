@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user')
 const wrapAsync = require('../utils/catchAsync')
-const validate = require('../utils/validateSchema')
+const validate = require('../utils/middleware/validateSchema')
 const { userSchema } = require('../joiSchemas')
 const passport = require('passport')
 

@@ -22,6 +22,7 @@ const seedDB = async () => {
         const currCity = sample(cities)
         const price = Math.floor(Math.random() * 20) + 10;
         const camp = new Campground({
+            author: '62fe8ff3c45b5f86629c8b77', // Fake Darth Vader user; need to update as needed
             location: `${currCity.city}, ${currCity.state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
             image: 'https://source.unsplash.com/collection/483251',
