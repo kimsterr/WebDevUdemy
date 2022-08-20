@@ -33,15 +33,20 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <p>
+                        Reviewer: <%= rev.author.username %>
+                    </p>
+                    <p>
                         <b>(<%= rev.rating %>*)</b>
                         <%= rev.body %>
                     </p>
+                    <% if (currentUser && rev.author.equals(currentUser._id)) {%>
                     <p>
                     <form action="/campgrounds/<%= campground._id %>/reviews/<%= rev._id %>?_method=delete"
                         method="post">
                         <button class="btn btn-sm btn-danger">DELETE</button>
                     </form>
                     </p>
+                    <% } %>
                 </div>
             </div>
             <% } %>
@@ -51,8 +56,10 @@
         <% if (currentUser && campground.author.equals(currentUser._id)) {%>
             <a href="/campgrounds/<%= campground._id %>/edit">EDIT this</a>
             <% } %>
-                <a href="/campgrounds/<%= campground._id %>/reviews/new">Add review</a>
-                <a href="/campgrounds">Back to index</a>
+                <% if (currentUser) {%>
+                    <a href="/campgrounds/<%= campground._id %>/reviews/new">Add review</a>
+                    <% } %>
+                        <a href="/campgrounds">Back to index</a>
     </div>
     <div class="row">
         <% if (currentUser && campground.author.equals(currentUser._id)) {%>
