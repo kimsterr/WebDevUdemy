@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const wrapAsync = require('../utils/catchAsync')
-const validate = require('../utils/validateSchema')
+const validate = require('../utils/middleware/validateSchema')
 const Campground = require('../models/campground')
 const { campgroundSchema } = require('../joiSchemas')
-const isLoggedIn = require('../utils/isLoggedIn')
+const isLoggedIn = require('../utils/middleware/isLoggedIn')
 
 // Routes will be starting with '/campgrounds'
 
@@ -46,9 +46,16 @@ router.post('/', isLoggedIn, validate(campgroundSchema), wrapAsync(async (req, r
 }))
 
 router.put('/:id', isLoggedIn, validate(campgroundSchema), wrapAsync(async (req, res, next) => {
-    await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
-    req.flash('success', 'Successfully updated campground!');
-    res.redirect(`/campgrounds/${req.params.id}`);
+    const cg = await Campground.findById(req.params.id);
+    if (!cg.author.equals(req.user._id)) {
+        req.flash('error', 'User not authorized to perform that action!');
+        res.redirect('back');
+    }
+    else {
+        await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground })
+        req.flash('success', 'Successfully updated campground!');
+        res.redirect(`/campgrounds/${req.params.id}`);
+    }
 }))
 
 router.delete('/:id', isLoggedIn, wrapAsync(async (req, res, next) => {

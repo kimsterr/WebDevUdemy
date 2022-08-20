@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router({ mergeParams: true });
 
 const wrapAsync = require('../utils/catchAsync')
-const validate = require('../utils/validateSchema')
+const validate = require('../utils/middleware/validateSchema')
 const Campground = require('../models/campground')
 const Review = require('../models/review')
 const { reviewSchema } = require('../joiSchemas')
